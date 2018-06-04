@@ -101,10 +101,16 @@
    - section1
    - section1.10
 
+- name: check if /etc/docker/daemon.json exists
+  stat:
+    path: /etc/docker/daemon.json
+  register: docker_daemon_json
+
 - name: 1.11 Ensure auditing is configured for Docker files and directories - /etc/docker/daemon.json (Scored)
   lineinfile: 
     dest: /etc/audit/audit.rules
     line: "-w /etc/docker/daemon.json -k docker"
+  when: docker_daemon_json.exists
   notify: Reload auditd Rules
   tags:
    - scored
