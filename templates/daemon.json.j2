@@ -1,0 +1,50 @@
+{
+	"icc": false,
+        "debug": false,
+	"iptables": true,
+	"log-level": "info",
+	"log-driver": "syslog",
+	"disable-legacy-registry": true,
+	"live-restore": true,
+	"userland-proxy": false,
+	"experimental": false,
+	"no-new-privileges": true,
+        {% if tls_verify is defined or tls_ca_cert is defined or tls_cert is defined or tls_key is defined %}
+	{% if tls_verify is defined %}
+	"tlsverify": true,
+	{% endif %}
+        {% if tls_ca_cert is defined %}
+        "tlscacert": "{{ tls_ca_cert }}",
+        {% endif %}
+        {% if tls_cert is defined %}
+        "tlscert": "{{ tls_cert }}",
+        {% endif %}
+        {% if tls_key is defined %}
+        "tlskey": "{{ tls_key }}",
+        {% endif %}
+        {% endif %}
+        "labels": [
+		{% if tls_verify is defined %}
+		"tlsverify=true",
+		{% endif %}
+		{% if tls_ca_cert is defined %}
+		"tlscacert=true",
+		{% endif %}
+		{% if tls_cert is defined %}
+		"tlscert=true",
+		{% endif %}
+		{% if tls_key is defined %}
+		"tlskey=true",
+		{% endif %}
+		"icc=false",
+		"debug=false",
+		"iptables=true",
+ 		"log-level=info",
+		"log-driver=syslog",
+		"legacy-registry=disabled",
+		"live-restore=true",
+		"userland-proxy=false",
+		"experimental=false",
+		"no-new-privileges=true"
+        ]
+}
