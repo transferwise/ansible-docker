@@ -44,6 +44,18 @@
     - '/etc/docker/daemon.json'
     - '/usr/bin/docker-containerd'
     - '/usr/bin/docker-runc'
+   tags:
+    - scored
+    - section1
+    - section1.5
+    - section1.6
+    - section1.7
+    - section1.8
+    - section1.9
+    - section1.10
+    - section1.11
+    - section1.12
+    - section1.13
 
 # This forces handler to run
 - meta: flush_handlers
