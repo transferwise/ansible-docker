@@ -29,101 +29,11 @@
    - section1
    - section1.4
 
-- name: 1.5 Ensure auditing is configured for the Docker daemon (Scored)
-  lineinfile: 
+- name: Create auditd rules
+  lineinfile:
     dest: /etc/audit/audit.rules
-    line: "-w /usr/bin/docker -k docker"
+    line: "-w {{ item }} -k docker"
   notify: Reload auditd Rules
-  tags:
-   - scored
-   - section1
-   - section1.5
-
-- name: 1.6 Ensure auditing is configured for Docker files and directories - /var/lib/docker (Scored)
-  lineinfile: 
-    dest: /etc/audit/audit.rules
-    line: "-w /var/lib/docker -k docker"
-  notify: Reload auditd Rules
-  tags:
-   - scored
-   - section1
-   - section1.6
-
-- name: 1.7 Ensure auditing is configured for Docker files and directories - /etc/docker (Scored)
-  lineinfile: 
-    dest: /etc/audit/audit.rules
-    line: "-w /etc/docker -k docker"
-  notify: Reload auditd Rules
-  tags:
-   - scored
-   - section1
-   - section1.7
-
-- name: 1.8 Ensure auditing is configured for Docker files and directories - docker.service (Scored)
-  lineinfile: 
-    dest: /etc/audit/audit.rules
-    line: "-w /lib/systemd/system/docker.service -k docker"
-  notify: Reload auditd Rules
-  tags:
-   - scored
-   - section1
-   - section1.8
-
-- name: 1.9 Ensure auditing is configured for Docker files and directories - docker.socket (Scored)
-  lineinfile: 
-    dest: /etc/audit/audit.rules
-    line: "-w /lib/systemd/system/docker.socket -k docker"
-  notify: Reload auditd Rules
-  tags:
-   - scored
-   - section1
-   - section1.9
-
-- name: 1.10 Ensure auditing is configured for Docker files and directories - /etc/default/docker (Scored)
-  lineinfile: 
-    dest: /etc/audit/audit.rules
-    line: "-w /etc/default/docker -k docker"
-  notify: Reload auditd Rules
-  tags:
-   - scored
-   - section1
-   - section1.10
-
-- name: 1.11 Ensure auditing is configured for Docker files and directories - /etc/docker/daemon.json (Scored)
-  lineinfile: 
-    dest: /etc/audit/audit.rules
-    line: "-w /etc/docker/daemon.json -k docker"
-  notify: Reload auditd Rules
-  tags:
-   - scored
-   - section1
-   - section1.11
-
-- name: 1.12 Ensure auditing is configured for Docker files and directories - /usr/bin/docker-containerd (Scored)
-  lineinfile: 
-    dest: /etc/audit/audit.rules
-    line: "-w /usr/bin/docker-containerd -k docker"
-  notify: Reload auditd Rules
-  tags:
-   - scored
-   - section1
-   - section1.12
-
-- name: 1.13 Ensure auditing is configured for Docker files and directories - /usr/bin/docker-runc (Scored)
-  lineinfile: 
-    dest: /etc/audit/audit.rules
-    line: "-w /usr/bin/docker-runc -k docker"
-  notify: Reload auditd Rules
-  tags:
-   - scored
-   - section1
-   - section1.13
-
-- name: Validate that auditd rules are present
-  command: bash -c "auditctl -l | grep {{ item }}"
-  register: res
-  failed_when: res.rc == 1
-  changed_when: res.rc == 1
   with_items:
     - '/usr/bin/docker'
     - '/var/lib/docker'
@@ -134,3 +44,108 @@
     - '/etc/docker/daemon.json'
     - '/usr/bin/docker-containerd'
     - '/usr/bin/docker-runc'
+
+# This forces handler to run
+- meta: flush_handlers
+  tags:
+    - scored
+    - section1
+    - section1.5
+    - section1.6
+    - section1.7
+    - section1.8
+    - section1.9
+    - section1.10
+    - section1.11
+    - section1.12
+    - section1.13
+
+- name: 1.5 Ensure auditing is configured for the Docker daemon (Scored)
+  command: bash -c "auditctl -l | grep /usr/bin/docker"
+  register: res
+  failed_when: res.rc == 1
+  changed_when: res.rc == 1
+  tags:
+   - scored
+   - section1
+   - section1.5
+
+- name: 1.6 Ensure auditing is configured for Docker files and directories - /var/lib/docker (Scored)
+  command: bash -c "auditctl -l | grep /var/lib/docker"
+  register: res
+  failed_when: res.rc == 1
+  changed_when: res.rc == 1
+  tags:
+   - scored
+   - section1
+   - section1.6
+
+- name: 1.7 Ensure auditing is configured for Docker files and directories - /etc/docker (Scored)
+  command: bash -c "auditctl -l | grep /etc/docker"
+  register: res
+  failed_when: res.rc == 1
+  changed_when: res.rc == 1
+  tags:
+   - scored
+   - section1
+   - section1.7
+
+- name: 1.8 Ensure auditing is configured for Docker files and directories - docker.service (Scored)
+  command: bash -c "auditctl -l | grep /lib/systemd/system/docker.service"
+  register: res
+  failed_when: res.rc == 1
+  changed_when: res.rc == 1
+  tags:
+   - scored
+   - section1
+   - section1.8
+
+- name: 1.9 Ensure auditing is configured for Docker files and directories - docker.socket (Scored)
+  command: bash -c "auditctl -l | grep /lib/systemd/system/docker.socket"
+  register: res
+  failed_when: res.rc == 1
+  changed_when: res.rc == 1
+  tags:
+   - scored
+   - section1
+   - section1.9
+
+- name: 1.10 Ensure auditing is configured for Docker files and directories - /etc/default/docker (Scored)
+  command: bash -c "auditctl -l | grep /etc/default/docker"
+  register: res
+  failed_when: res.rc == 1
+  changed_when: res.rc == 1
+  tags:
+   - scored
+   - section1
+   - section1.10
+
+- name: 1.11 Ensure auditing is configured for Docker files and directories - /etc/docker/daemon.json (Scored)
+  command: bash -c "auditctl -l | grep /etc/docker/daemon.json"
+  register: res
+  failed_when: res.rc == 1
+  changed_when: res.rc == 1
+  tags:
+   - scored
+   - section1
+   - section1.11
+
+- name: 1.12 Ensure auditing is configured for Docker files and directories - /usr/bin/docker-containerd (Scored)
+  command: bash -c "auditctl -l | grep /usr/bin/docker-containerd"
+  register: res
+  failed_when: res.rc == 1
+  changed_when: res.rc == 1
+  tags:
+   - scored
+   - section1
+   - section1.12
+
+- name: 1.13 Ensure auditing is configured for Docker files and directories - /usr/bin/docker-runc (Scored)
+  command: bash -c "auditctl -l | grep /usr/bin/docker-runc"
+  register: res
+  failed_when: res.rc == 1
+  changed_when: res.rc == 1
+  tags:
+   - scored
+   - section1
+   - section1.13
