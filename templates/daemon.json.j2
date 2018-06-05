@@ -11,8 +11,8 @@
 	"no-new-privileges": true,
         "default-ulimits": {
 		"nofile": {
-			"Soft": 102400,
-			"Hard": 102400,
+			"Soft": {{ ulimit_nofile_soft }},
+			"Hard": {{ ulimit_nofile_hard }},
 			"Name": "nofile"
 		}
         },
