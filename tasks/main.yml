@@ -14,6 +14,11 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 #
+
+- name: install Prerequisites
+  include: install_prereqs.yml
+  tags: prereqs
+
 - name: Run Section 01
   include: section_01.yml
   tags: section1
