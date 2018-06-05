@@ -1,0 +1,6 @@
+---
+- name: ensure Auditd is installed
+  package:
+    name: auditd
+    state: present
+
