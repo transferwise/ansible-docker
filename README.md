@@ -30,7 +30,13 @@ userns_remap_user: "default"
 ```
 This playbook makes use of Docker's default behaviours; if you set the `userns-remap` to `default`, Docker will create a user called `dockeremap`. If you wish to change this, please [check the Docker guide for setting up a namespace user.](https://docs.docker.com/engine/security/userns-remap/#enable-userns-remap-on-the-daemon).
 
-
+```
+tls_verify: true
+tls_ca_cert: /path/to/ca/cert
+tls_cert: /path/to/cert
+tls_key: /path/to/key
+```
+If you want to set up TLS for Docker, change the above values to point to where you have placed your TLS certificates and keys.
 
 Dependencies
 ------------
