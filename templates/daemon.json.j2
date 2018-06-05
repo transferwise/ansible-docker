@@ -1,4 +1,6 @@
 {
+	"userns-remap": "{{ userns_remap_user }}",
+	"cgroup-parent": "{{ cgroup_parent }}",
 	"icc": false,
         "debug": false,
 	"iptables": true,
@@ -53,6 +55,7 @@
 		"userland-proxy=false",
 		"experimental=false",
 		"no-new-privileges=true",
-		"ulimit=true"
+		"ulimit=true",
+		"cgroup-parent={{ cgroup_parent }}"
         ]
 }

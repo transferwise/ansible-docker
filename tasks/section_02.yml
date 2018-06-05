@@ -193,9 +193,49 @@
     - section2
     - section2.7
 
+- name: 2.8 Enable user namespace support (Scored)
+  command: "grep 'dockremap' /etc/subuid /etc/subgid -q"
+  register: res
+  failed_when: res.rc == 1
+  changed_when: res.rc ==1
+  tags:
+    - scored
+    - section2
+    - section2.8
+  when: userns_remap_user == "default"
+
+- name: 2.8 Enable user namespace support (Scored)
+  command: "grep '{{ userns_remap_user }}' /etc/subuid /etc/subgid -q"
+  register: res
+  failed_when: res.rc == 1
+  changed_when: res.rc ==1
+  tags:
+    - scored
+    - section2
+    - section2.8
+  when: userns_remap_user != "default"
+
+- name: 2.9 Ensure the default cgroup usage has been confirmed (Scored) 
+  command: bash -c "docker info | grep 'cgroup-parent=docker' -q "
+  register: res
+  failed_when: res.rc == 1
+  changed_when: res.rc == 1
+  tags:
+    - scored
+    - section2
+    - section2.9
+
+- name: 2.10 Ensure base device size is not changed until needed (Scored)
+  debug:
+    msg: "We are delegating this role to Kubernetes"
+  tags:
+    - scored
+    - section2
+    - section2.10
+
 - name: 2.11 Ensure that authorization for Docker client commands is enabled (Scored)
   debug:
-    msg: "We are not doing this"
+    msg: "We are delegating this role to Kubernetes"
   tags:
     - scored
     - section2
@@ -220,7 +260,7 @@
     - section2.13
 
 - name: 2.14 Ensure live restore is Enabled (Scored)
-  command: bash -c "docker info | grep 'Live Restore Enabled: true'"
+  command: bash -c 'docker info | grep "Live Restore Enabled{{':'}} true"'
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -248,7 +288,7 @@
     - section2.16
 
 - name: 2.17 Ensure experimental features are avoided in production (Scored)
-  command: bash -c "docker info | grep 'Experimental: false' -q "
+  command: bash -c "docker info | grep 'Experimental{{':'}} false' -q "
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
