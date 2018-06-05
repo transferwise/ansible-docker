@@ -77,4 +77,8 @@
   failed_when: res.rc == 1
   changed_when: res.rc == 1
 
-
+- name: 2.13 Ensure operations on legacy registry (v1) are Disabled (Scored)
+  command: bash -c "docker info | grep legacy-registry -q "
+  register: res
+  failed_when: res.rc == 1
+  changed_when: res.rc == 1
