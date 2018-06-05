@@ -42,12 +42,14 @@
 - name: Find out if Docker is running on socket or TCP
   command: bash -c "systemctl cat docker.service | grep ExecStart | awk '{print $3}' | grep 'fd://' -q"
   register: docker_is_unix_socket
+  changed_when: docker_is_unix_socket.rc == 1
 
 # Only run this when we're _not_ running on TCP
 - name: 2.6 Ensure TLS authentication for Docker daemon is configured (Scored)
   command: bash -c "docker info | grep {{ item }} -q "
-  failed_when: res.stdout.rc == 1
-  changed_when: res.stdout.rc == 1
+  register: res
+  failed_when: res.rc == 1
+  changed_when: res.rc == 1
   with_items:
     - tlsverify
     - tlscacert
@@ -57,5 +59,8 @@
 
 - name: 2.7 Ensure the default ulimit is configured appropriately (Not Scored)
   command: bash -c "docker info | grep ulimit -q "
-  failed_when: res.stdout.rc == 1
-  changed_when: res.stdout.rc == 1
+  register: res
+  failed_when: res.rc == 1
+  changed_when: res.rc == 1
+
+

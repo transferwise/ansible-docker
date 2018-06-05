@@ -9,6 +9,13 @@
 	"userland-proxy": false,
 	"experimental": false,
 	"no-new-privileges": true,
+        "default-ulimits": {
+		"nofile": {
+			"Soft": 102400,
+			"Hard": 102400,
+			"Name": "nofile"
+		}
+        },
         {% if tls_verify is defined or tls_ca_cert is defined or tls_cert is defined or tls_key is defined %}
 	{% if tls_verify is defined %}
 	"tlsverify": true,
@@ -45,6 +52,7 @@
 		"live-restore=true",
 		"userland-proxy=false",
 		"experimental=false",
-		"no-new-privileges=true"
+		"no-new-privileges=true",
+		"ulimit=true"
         ]
 }
