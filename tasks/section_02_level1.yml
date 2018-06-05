@@ -6,6 +6,20 @@
     dest: /etc/docker/daemon.json
   notify: Reload docker
 
+- name: Add soft nofile ulimit to PAM
+  pam_limits:
+    domain: root
+    limit_type: soft
+    limit_item: nofile
+    value: "{{ ulimit_nofile_soft }}"
+
+- name: Add hard nofile ulimit to PAM
+  pam_limits:
+    domain: root
+    limit_type: hard
+    limit_item: nofile
+    value: "{{ ulimit_nofile_hard }}"
+
 - meta: flush_handlers
 
 - name: 2.1 Ensure network traffic is restricted between containers on the default bridge (Scored)

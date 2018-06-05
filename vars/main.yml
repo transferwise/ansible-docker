@@ -1,0 +1,3 @@
+---
+ulimit_nofile_soft: 102400
+ulimit_nofile_hard: 102400
