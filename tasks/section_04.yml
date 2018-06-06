@@ -1,31 +1,91 @@
 ---
 - name: 4.1 Create a user for the container (Scored)
-  debug: msg="Manual action"
+  debug:
+    msg: "Playbook does not handle this as it is a process change"
   tags:
    - scored
+   - section4
    - section4.1
 
 - name: 4.2 Use trusted base images for containers (Not Scored)
-  debug: msg="Manual action"
+  debug:
+    msg: "Playbook does not handle this as it is a process change"
   tags:
    - notscored
+   - section4
    - section4.2
 
 - name: 4.3 Do not install unnecessary packages in the container (Not Scored)
-  debug: msg="Manual action"
+  debug:
+    msg: "Playbook does not handle this as it is a process change"
   tags:
    - notscored
+   - section4
    - section4.3
 
 - name: 4.4 Rebuild the images to include security patches (Not Scored)
-  debug: msg="Manual action"
+  debug:
+    msg: "Playbook does not handle this as it is a process change"
   tags:
    - notscored
+   - section4
    - section4.4
 
 - name: 4.5 Enable Content trust for Docker (Scored)
-  debug: msg="export DOCKER_CONTENT_TRUST=1 ???"
+  debug:
+    msg: "We will enable this in future when we have the infrastructure to do so. Please contact @jose.galarza"
+#   lineinfile:
+#     dest: /etc/bash.bashrc
+#     line: "export DOCKER_CONTENT_TRUST=1"
   tags:
    - scored
+   - section4
    - section4.5
 
+- name: 4.6 Ensure HEALTHCHECK instructions have been added to the container image (Scored)
+  debug:
+    msg: "Playbook does not handle this as it is a process change"
+  tags:
+    - scored
+    - section4
+    - section4.6
+
+- name: 4.7 Ensure update instructions are not use alone in the Dockerfile (Not Scored)
+  debug:
+    msg: "Playbook does not handle this as it is a process change"
+  tags:
+    - scored
+    - section4
+    - section4.7
+
+- name: 4.8 Ensure setuid and setgid permissions are removed in the images (Not Scored)
+  debug:
+    msg: "Playbook does not handle this as it is a process chnage"
+  tags:
+    - notscored
+    - section4
+    - section4.8
+
+- name: 4.9 Ensure COPY is used instead of ADD in Dockerfile (Not Scored)
+  debug:
+    msg: "Playbook does not handle this as it is a process chnage"
+  tags:
+    - notscored
+    - section4
+    - section4.9
+
+- name: 4.10 Ensure secrets are not stored in Dockerfiles (Not Scored)
+  debug:
+    msg: "Playbook does not handle this as it is a process chnage"
+  tags:
+    - notscored
+    - section4
+    - section4.10
+
+- name: 4.11 Ensure verified packages are only Installed (Not Scored)
+  debug:
+    msg: "Playbook does not handle this as it is a process chnage"
+  tags:
+    - notscored
+    - section4
+    - section4.11
