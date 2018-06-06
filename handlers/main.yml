@@ -1,10 +1,10 @@
 # https://bugzilla.redhat.com/show_bug.cgi?id=1026648
   - name: Reload auditd Rules
-    service: 
-      name: auditd 
+    service:
+      name: auditd
       state: restarted
 
   - name: Reload docker
-    service: 
+    service:
       name: docker
       state: restarted
