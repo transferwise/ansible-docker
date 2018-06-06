@@ -74,7 +74,7 @@
     - section1.13
 
 - name: 1.5 Ensure auditing is configured for the Docker daemon (Scored)
-  shell: bash -c "auditctl -l | grep /usr/bin/docker"
+  shell: auditctl -l | grep /usr/bin/docker
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -84,7 +84,7 @@
    - section1.5
 
 - name: 1.6 Ensure auditing is configured for Docker files and directories - /var/lib/docker (Scored)
-  shell: bash -c "auditctl -l | grep /var/lib/docker"
+  shell: auditctl -l | grep /var/lib/docker
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -94,7 +94,7 @@
    - section1.6
 
 - name: 1.7 Ensure auditing is configured for Docker files and directories - /etc/docker (Scored)
-  shell: bash -c "auditctl -l | grep /etc/docker"
+  shell: auditctl -l | grep /etc/docker
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -104,7 +104,7 @@
    - section1.7
 
 - name: 1.8 Ensure auditing is configured for Docker files and directories - docker.service (Scored)
-  shell: bash -c "auditctl -l | grep /lib/systemd/system/docker.service"
+  shell: auditctl -l | grep /lib/systemd/system/docker.service
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -114,7 +114,7 @@
    - section1.8
 
 - name: 1.9 Ensure auditing is configured for Docker files and directories - docker.socket (Scored)
-  shell: bash -c "auditctl -l | grep /lib/systemd/system/docker.socket"
+  shell: auditctl -l | grep /lib/systemd/system/docker.socket
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -124,7 +124,7 @@
    - section1.9
 
 - name: 1.10 Ensure auditing is configured for Docker files and directories - /etc/default/docker (Scored)
-  shell: bash -c "auditctl -l | grep /etc/default/docker"
+  shell: auditctl -l | grep /etc/default/docker
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -134,7 +134,7 @@
    - section1.10
 
 - name: 1.11 Ensure auditing is configured for Docker files and directories - /etc/docker/daemon.json (Scored)
-  shell: bash -c "auditctl -l | grep /etc/docker/daemon.json"
+  shell: auditctl -l | grep /etc/docker/daemon.json
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -144,7 +144,7 @@
    - section1.11
 
 - name: 1.12 Ensure auditing is configured for Docker files and directories - /usr/bin/docker-containerd (Scored)
-  shell: bash -c "auditctl -l | grep /usr/bin/docker-containerd"
+  shell: auditctl -l | grep /usr/bin/docker-containerd
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -154,7 +154,7 @@
    - section1.12
 
 - name: 1.13 Ensure auditing is configured for Docker files and directories - /usr/bin/docker-runc (Scored)
-  shell: bash -c "auditctl -l | grep /usr/bin/docker-runc"
+  shell: auditctl -l | grep /usr/bin/docker-runc
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
