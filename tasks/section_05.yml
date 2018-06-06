@@ -9,7 +9,7 @@
    - section5.1
 
 - name: 5.2 Verify SELinux security options, if applicable (Scored)
-  debug: 
+  debug:
     msg: "Needs validation"
   tags:
    - scored
