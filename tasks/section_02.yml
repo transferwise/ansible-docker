@@ -184,7 +184,7 @@
     - section2.6
 
 - name: 2.7 Ensure the default ulimit is configured appropriately (Not Scored)
-  shell: bash -c "docker info | grep ulimit -q"
+  shell: docker info | grep ulimit -q
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
