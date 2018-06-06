@@ -1,0 +1,52 @@
+---
+
+- name: Override systemd for Docker
+  template:
+    src: docker.service.j2
+    dest: /etc/systemd/system/docker.service
+  tags:
+    - certificates
+  notify:
+    - Reload systemd
+    - Reload docker
+
+- name: Ensure certs.d directory exists
+  file:
+    path: /etc/docker/certs.d
+    state: directory
+  tags:
+    - certificates
+
+- name: Install Docker CA Certificate
+  copy:
+    src: "{{ role_path }}/files/{{ tls_ca_cert }}"
+    dest: "/etc/docker/{{ tls_ca_cert }}"
+    owner: root
+    group: root
+    mode: 0444
+  tags:
+    - certificate
+
+- name: Install Docker Certificate
+  copy:
+    src: "{{ role_path }}/files/{{ tls_cert }}"
+    dest: "/etc/docker/{{ tls_cert }}"
+    owner: root
+    group: root
+    mode: 0444
+  tags:
+    - certificate
+
+- name: Install Docker certificate key
+  copy:
+    src: "{{ role_path }}/files/{{ tls_key }}"
+    dest: "/etc/docker/{{ tls_key }}"
+    owner: root
+    group: root
+    mode: 0400
+  tags:
+    - certificate
+
+- meta: flush_handlers
+  tags:
+    - certificate

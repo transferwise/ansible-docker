@@ -23,13 +23,13 @@
 	"tlsverify": true,
 	{% endif %}
         {% if tls_ca_cert is defined %}
-        "tlscacert": "{{ tls_ca_cert }}",
+        "tlscacert": "/etc/docker/{{ tls_ca_cert }}",
         {% endif %}
         {% if tls_cert is defined %}
-        "tlscert": "{{ tls_cert }}",
+        "tlscert": "/etc/docker/{{ tls_cert }}",
         {% endif %}
         {% if tls_key is defined %}
-        "tlskey": "{{ tls_key }}",
+        "tlskey": "/etc/docker/{{ tls_key }}",
         {% endif %}
         {% endif %}
         "labels": [

@@ -63,7 +63,7 @@
 
 - name: 3.7 Ensure that registry certificate file ownership is set to root:root (Scored)
   file:
-    path: "{{ tls_registry_cert }}"
+    path: "/etc/docker/{{ tls_registry_cert }}"
     state: touch
     owner: root
     group: root
@@ -75,7 +75,7 @@
 
 - name: 3.8 Ensure that registry certificate file permissions are set to 444 or more restrictive (Scored)
   file:
-    path: "{{ tls_registry_cert }}"
+    path: "/etc/docker/{{ tls_registry_cert }}"
     state: touch
     mode: 0444
   tags:
@@ -86,7 +86,7 @@
 
 - name: 3.9 Ensure that TLS CA certificate file ownership is set to root:root (Scored)
   file:
-    path: "{{ tls_ca_cert }}"
+    path: "/etc/docker/{{ tls_ca_cert }}"
     state: touch
     owner: root
     group: root
@@ -98,7 +98,7 @@
 
 - name: 3.10 Ensure that TLS CA certificate file permissions are set to 444 or more restrictive (Scored)
   file:
-    path: "{{ tls_ca_cert }}"
+    path: "/etc/docker/{{ tls_ca_cert }}"
     state: touch
     mode: 0444
   when: tls_ca_cert is defined
@@ -109,7 +109,7 @@
 
 - name: 3.11 Ensure that Docker server certificate file ownership is set to root:root (Scored)
   file:
-    path: "{{ tls_cert }}"
+    path: "/etc/docker/{{ tls_cert }}"
     state: touch
     owner: root
     group: root
@@ -132,7 +132,7 @@
 
 - name: 3.13 Ensure that Docker server certificate key file ownership is set to root:root (Scored)
   file:
-    path: "{{ tls_key }}"
+    path: "/etc/docker/{{ tls_key }}"
     state: touch
     owner: root
     group: root
@@ -144,7 +144,7 @@
 
 - name: 3.14 Ensure that Docker server certificate key file permissions are set to 400 (Scored)
   file:
-    path: "{{ tls_key }}"
+    path: "/etc/docker/{{ tls_key }}"
     state: touch
     mode: 0400
   when: tls_key is defined

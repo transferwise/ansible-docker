@@ -19,26 +19,31 @@
   include: install_prereqs.yml
   tags: prereqs
 
-- name: Run Section 01
+- name: install certificates
+  include: install_certificates.yml
+  tags: install_certs
+  when: tls_ca_cert is defined and tls_cert is defined and tls_key is defined
+
+- name: Run CIS Section 01
   include: section_01.yml
   tags: section1
 
-- name: Run Section 02
+- name: Run CIS Section 02
   include: section_02.yml
   tags: section2
 
-- name: Run Section 03
+- name: Run CIS Section 03
   include: section_03.yml
   tags: section3
 
-- name: Run Section 04
+- name: Run CIS Section 04
   include: section_04.yml
   tags: section4
 
-- name: Run Section 05
+- name: Run CIS Section 05
   include: section_05.yml
   tags: section5
 
-- name: Run Section 06
+- name: Run CIS Section 06
   include: section_06.yml
   tags: section6
