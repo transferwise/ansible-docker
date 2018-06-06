@@ -215,7 +215,7 @@
     - section2.8
   when: userns_remap_user != "default"
 
-- name: 2.9 Ensure the default cgroup usage has been confirmed (Scored) 
+- name: 2.9 Ensure the default cgroup usage has been confirmed (Scored)
   command: bash -c "docker info | grep 'cgroup-parent=docker' -q "
   register: res
   failed_when: res.rc == 1

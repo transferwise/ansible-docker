@@ -21,6 +21,7 @@
    - notscored
    - section1
    - section1.3
+   - skip_ansible_lint
 
 - name: 1.4 Ensure only trusted users are allowed to control Docker daemon (Scored)
   debug: msg="*** Not in a scope of this playbook"
