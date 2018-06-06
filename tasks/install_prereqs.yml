@@ -7,6 +7,13 @@
     - prereqs
     - skip_ansible_lint
 
+- name: ensure apt-transport-https is installed
+  package:
+    name: apt-transport-https
+    state: present
+  tags:
+    - prereqs
+
 # By adding the ID flag (which is the last 8 characters of the fingerprint) we
 # can validate that the correct key has been added. If the id does NOT match
 # the fingerprint then apt-key will fail and the key will NOT be added.
@@ -41,3 +48,13 @@
   tags:
     - prereqs
     - skip_ansible_lint
+
+- name: Ensure services are started
+  service:
+    name: "{{ item }}"
+    state: started
+  with_items:
+    - auditd
+    - docker
+  tags:
+    - prereqs
