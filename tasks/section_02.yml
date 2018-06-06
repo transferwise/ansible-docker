@@ -157,8 +157,10 @@
     - section2
     - section2.5
 
+# The linter will complain about you not using the systemd module here. I don't
+# _need_ to use the systemd module though.
 - name: Find out if Docker is running on socket or TCP
-  shell: systemctl cat docker.service | grep ExecStart | awk '{print $3}' | grep 'fd://' -q
+  shell: bash -c "systemctl cat docker.service | grep ExecStart | awk '{print $3}' | grep 'fd://' -q"
   register: docker_is_unix_socket
   changed_when: docker_is_unix_socket.rc == 1
   tags:
