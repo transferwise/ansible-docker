@@ -2,7 +2,10 @@
 - name: ensure Auditd is installed
   package:
     name: auditd
-    state: present
+    state: latest
+  tags:
+    - prereqs
+    - skip_ansible_lint
 
 # By adding the ID flag (which is the last 8 characters of the fingerprint) we
 # can validate that the correct key has been added. If the id does NOT match
@@ -12,20 +15,29 @@
     id: 0EBFCD88
     url: https://download.docker.com/linux/ubuntu/gpg
     state: present
+  tags:
+    - prereqs
 
 - name: Add docker repo
   apt_repository:
     repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
     state: present
     filename: docker
+  tags:
+    - prereqs
 
 - name: Update apt-cache
   apt:
     update_cache: yes
     upgrade: no
     cache_valid_time: 7200
+  tags:
+    - prereqs
 
 - name: Install docker-ce
   package:
     name: docker-ce
     state: latest
+  tags:
+    - prereqs
+    - skip_ansible_lint
