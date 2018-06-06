@@ -4,8 +4,12 @@
     name: auditd
     state: present
 
+# By adding the ID flag (which is the last 8 characters of the fingerprint) we
+# can validate that the correct key has been added. If the id does NOT match
+# the fingerprint then apt-key will fail and the key will NOT be added. 
 - name: Add docker gpg key
   apt_key:
+    id: 0EBFCD88
     url: https://download.docker.com/linux/ubuntu/gpg
     state: present
 
