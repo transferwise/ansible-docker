@@ -107,7 +107,7 @@
     - section2.18
 
 - name: 2.1 Ensure network traffic is restricted between containers on the default bridge (Scored)
-  command: bash -c 'docker network inspect bridge --format "{{ '{{' }} .Options {{ '}}' }}" | grep com.docker.network.bridge.enable_icc:false -q'
+  shell: bash -c 'docker network inspect bridge --format "{{ '{{' }} .Options {{ '}}' }}" | grep com.docker.network.bridge.enable_icc:false -q'
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -117,7 +117,7 @@
     - section2.1
 
 - name: 2.2 Ensure the logging level is set to 'info' (Scored)
-  command: bash -c "docker info | grep 'log-level=info' -q"
+  shell: bash -c "docker info | grep 'log-level=info' -q"
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -127,7 +127,7 @@
     - section2.2
 
 - name: 2.3 Ensure Docker is allowed to make changes to iptables (Scored)
-  command: bash -c "docker info | grep 'iptables=true' -q"
+  shell: bash -c "docker info | grep 'iptables=true' -q"
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -138,7 +138,7 @@
 
 # There should only be 1 insecure registry, and that is 127.0.0.1/8
 - name: 2.4 Ensure insecure registries are not used (Scored)
-  command: bash -c "docker info | grep 'Insecure Registries' -a2 | grep 'Live Restore' -q"
+  shell: bash -c "docker info | grep 'Insecure Registries' -a2 | grep 'Live Restore' -q"
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -148,7 +148,7 @@
     - section2.4
 
 - name: 2.5 Ensure aufs storage driver is not used (Scored)
-  command: bash -c "docker info | grep 'Storage Driver' | awk '{print $3}'"
+  shell: bash -c "docker info | grep 'Storage Driver' | awk '{print $3}'"
   register: res
   failed_when: res.stdout.find("aufs") == true
   changed_when: res.stdout.find("aufs") == true
@@ -158,7 +158,7 @@
     - section2.5
 
 - name: Find out if Docker is running on socket or TCP
-  command: bash -c "systemctl cat docker.service | grep ExecStart | awk '{print $3}' | grep 'fd://' -q"
+  shell: bash -c "systemctl cat docker.service | grep ExecStart | awk '{print $3}' | grep 'fd://' -q"
   register: docker_is_unix_socket
   changed_when: docker_is_unix_socket.rc == 1
   tags:
@@ -168,7 +168,7 @@
 
 # Only run this when we're _not_ running on TCP
 - name: 2.6 Ensure TLS authentication for Docker daemon is configured (Scored)
-  command: bash -c "docker info | grep {{ item }} -q "
+  shell: bash -c "docker info | grep {{ item }} -q "
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -184,7 +184,7 @@
     - section2.6
 
 - name: 2.7 Ensure the default ulimit is configured appropriately (Not Scored)
-  command: bash -c "docker info | grep ulimit -q "
+  shell: bash -c "docker info | grep ulimit -q "
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -194,7 +194,7 @@
     - section2.7
 
 - name: 2.8 Enable user namespace support (Scored)
-  command: "grep 'dockremap' /etc/subuid /etc/subgid -q"
+  shell: "grep 'dockremap' /etc/subuid /etc/subgid -q"
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc ==1
@@ -205,7 +205,7 @@
   when: userns_remap_user == "default"
 
 - name: 2.8 Enable user namespace support (Scored)
-  command: "grep '{{ userns_remap_user }}' /etc/subuid /etc/subgid -q"
+  shell: "grep '{{ userns_remap_user }}' /etc/subuid /etc/subgid -q"
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc ==1
@@ -216,7 +216,7 @@
   when: userns_remap_user != "default"
 
 - name: 2.9 Ensure the default cgroup usage has been confirmed (Scored)
-  command: bash -c "docker info | grep 'cgroup-parent=docker' -q "
+  shell: bash -c "docker info | grep 'cgroup-parent=docker' -q "
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -250,7 +250,7 @@
     - section2.12
 
 - name: 2.13 Ensure operations on legacy registry (v1) are Disabled (Scored)
-  command: bash -c "docker info | grep legacy-registry -q "
+  shell: bash -c "docker info | grep legacy-registry -q "
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -260,7 +260,7 @@
     - section2.13
 
 - name: 2.14 Ensure live restore is Enabled (Scored)
-  command: bash -c 'docker info | grep "Live Restore Enabled{{':'}} true"'
+  shell: bash -c 'docker info | grep "Live Restore Enabled{{':'}} true"'
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -270,7 +270,7 @@
     - section2.14
 
 - name: 2.15 Ensure Userland Proxy is Disabled (Scored)
-  command: bash -c "docker info | grep 'userland-proxy=false' -q "
+  shell: bash -c "docker info | grep 'userland-proxy=false' -q "
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -288,7 +288,7 @@
     - section2.16
 
 - name: 2.17 Ensure experimental features are avoided in production (Scored)
-  command: bash -c "docker info | grep 'Experimental{{':'}} false' -q "
+  shell: bash -c "docker info | grep 'Experimental{{':'}} false' -q "
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -298,7 +298,7 @@
     - section2.17
 
 - name: 2.18 Ensure containers are restricted from acquiring new privileges (Scored)
-  command: bash -c "docker info | grep 'no-new-privileges=true' -q "
+  shell: bash -c "docker info | grep 'no-new-privileges=true' -q "
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
