@@ -262,7 +262,7 @@
     - section2.13
 
 - name: 2.14 Ensure live restore is Enabled (Scored)
-  shell: bash -c 'docker info | grep "Live Restore Enabled{{':'}} true"'
+  shell: docker info | grep "Live Restore Enabled{{':'}} true"
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
