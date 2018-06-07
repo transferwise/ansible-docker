@@ -1,19 +1,215 @@
-#
-#   Licensed under the Apache License, Version 2.0 (the "License");
-#   you may not use this file except in compliance with the License.
-#   You may obtain a copy of the License at
-#
-#       http://www.apache.org/licenses/LICENSE-2.0
-#
-#   Unless required by applicable law or agreed to in writing, software
-#   distributed under the License is distributed on an "AS IS" BASIS,
-#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#   See the License for the specific language governing permissions and
-#   limitations under the License.
-#
+---
 
-  - include: section_03_level1.yml
-    tags:
-      - section3
-      - level1
+- name: 3.1 Ensure that docker.service file ownership is set to root:root (Scored)
+  file:
+    path: /lib/systemd/system/docker.service
+    state: touch
+    owner: root
+    group: root
+  tags:
+    - scored
+    - section3
+    - section3.1
 
+- name: 3.2 Ensure that docker.service file permissions are set to 644 or more restrictive (Scored)
+  file:
+    path: /lib/systemd/system/docker.service
+    mode: 0644
+  tags:
+    - scored
+    - section3
+    - section3.2
+
+- name: 3.3 Ensure that docker.socket file ownership is set to root:root (Scored)
+  file:
+    path: /lib/systemd/system/docker.socket
+    state: touch
+    owner: root
+    group: root
+  tags:
+    - scored
+    - section3
+    - section3.3
+
+- name: 3.4 Ensure that docker.socket file permissions are set to 644 or more restrictive (Scored)
+  file:
+    path: /lib/systemd/system/docker.socket
+    mode: 0644
+  tags:
+    - scored
+    - section3
+    - section3.4
+
+- name: 3.5 Ensure that /etc/docker directory ownership is set to root:root (Scored)
+  file:
+    path: /etc/docker
+    state: directory
+    owner: root
+    group: root
+  tags:
+    - scored
+    - section3
+    - section3.5
+
+- name: 3.6 Ensure that /etc/docker directory permissions are set to 755 or more restrictive (Scored)
+  file:
+    path: /etc/docker
+    state: directory
+    mode: 0755
+  tags:
+    - scored
+    - section3
+    - section3.6
+
+- name: 3.7 Ensure that registry certificate file ownership is set to root:root (Scored)
+  file:
+    path: "/etc/docker/{{ tls_registry_cert }}"
+    state: touch
+    owner: root
+    group: root
+  tags:
+    - scored
+    - section3
+    - section3.7
+  when: tls_registry_cert is defined
+
+- name: 3.8 Ensure that registry certificate file permissions are set to 444 or more restrictive (Scored)
+  file:
+    path: "/etc/docker/{{ tls_registry_cert }}"
+    state: touch
+    mode: 0444
+  tags:
+    - scored
+    - section3
+    - section3.8
+  when: tls_registry_cert is defined
+
+- name: 3.9 Ensure that TLS CA certificate file ownership is set to root:root (Scored)
+  file:
+    path: "/etc/docker/{{ tls_ca_cert }}"
+    state: touch
+    owner: root
+    group: root
+  when: tls_ca_cert is defined
+  tags:
+    - scored
+    - section3
+    - section3.9
+
+- name: 3.10 Ensure that TLS CA certificate file permissions are set to 444 or more restrictive (Scored)
+  file:
+    path: "/etc/docker/{{ tls_ca_cert }}"
+    state: touch
+    mode: 0444
+  when: tls_ca_cert is defined
+  tags:
+    - scored
+    - section3
+    - section3.10
+
+- name: 3.11 Ensure that Docker server certificate file ownership is set to root:root (Scored)
+  file:
+    path: "/etc/docker/{{ tls_cert }}"
+    state: touch
+    owner: root
+    group: root
+  when: tls_cert is defined
+  tags:
+    - scored
+    - section3
+    - section3.11
+
+- name: 3.12 Ensure that Docker server certificate file permissions are set to 444 or more restrictive (Scored)
+  file:
+    path: "{{ tls_cert }}"
+    state: touch
+    mode: 0444
+  when: tls_cert is defined
+  tags:
+    - scored
+    - section3
+    - section3.12
+
+- name: 3.13 Ensure that Docker server certificate key file ownership is set to root:root (Scored)
+  file:
+    path: "/etc/docker/{{ tls_key }}"
+    state: touch
+    owner: root
+    group: root
+  when: tls_key is defined
+  tags:
+    - scored
+    - section3
+    - section3.13
+
+- name: 3.14 Ensure that Docker server certificate key file permissions are set to 400 (Scored)
+  file:
+    path: "/etc/docker/{{ tls_key }}"
+    state: touch
+    mode: 0400
+  when: tls_key is defined
+  tags:
+    - scored
+    - section3
+    - section3.14
+
+- name: 3.15 Ensure that Docker socket file ownership is set to root:docker (Scored)
+  file:
+    path: /var/run/docker.sock
+    state: touch
+    owner: root
+    group: docker
+  tags:
+    - scored
+    - section3
+    - section3.15
+
+- name: 3.16 Ensure that Docker socket file permissions are set to 660 or more restrictive (Scored)
+  file:
+    path: /var/run/docker.sock
+    state: touch
+    mode: 0660
+  tags:
+    - scored
+    - section3
+    - section3.16
+
+- name: 3.17 Ensure that daemon.json file ownership is set to root:root (Scored)
+  file:
+    path: /etc/docker/daemon.json
+    owner: root
+    group: root
+  tags:
+    - scored
+    - section3
+    - section3.17
+
+- name: 3.18 Ensure that daemon.json file permissions are set to 644 or more restrictive (Scored)
+  file:
+    path: /etc/docker/daemon.json
+    mode: 0644
+  tags:
+    - scored
+    - section3
+    - section3.18
+
+- name: 3.19 Ensure that /etc/default/docker file ownership is set to root:root (Scored)
+  file:
+    path: /etc/default/docker
+    state: touch
+    owner: root
+    group: root
+  tags:
+    - scored
+    - section3
+    - section3.19
+
+- name: 3.20 Ensure that /etc/default/docker file permissions are set to 644 or more restrictive (Scored)
+  file:
+    path: /etc/default/docker
+    state: touch
+    mode: 0644
+  tags:
+    - scored
+    - section3
+    - section3.20

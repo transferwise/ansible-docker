@@ -1,24 +1,91 @@
-#
-#   Licensed under the Apache License, Version 2.0 (the "License");
-#   you may not use this file except in compliance with the License.
-#   You may obtain a copy of the License at
-#
-#       http://www.apache.org/licenses/LICENSE-2.0
-#
-#   Unless required by applicable law or agreed to in writing, software
-#   distributed under the License is distributed on an "AS IS" BASIS,
-#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#   See the License for the specific language governing permissions and
-#   limitations under the License.
-#
+---
+- name: 4.1 Create a user for the container (Scored)
+  debug:
+    msg: "Playbook does not handle this as it is a process change"
+  tags:
+   - scored
+   - section4
+   - section4.1
 
-  - include: section_04_level1.yml
-    tags:
-      - section4
-      - level1
+- name: 4.2 Use trusted base images for containers (Not Scored)
+  debug:
+    msg: "Playbook does not handle this as it is a process change"
+  tags:
+   - notscored
+   - section4
+   - section4.2
 
-  - include: section_04_level2.yml
-    tags:
-      - section4
-      - level2
+- name: 4.3 Do not install unnecessary packages in the container (Not Scored)
+  debug:
+    msg: "Playbook does not handle this as it is a process change"
+  tags:
+   - notscored
+   - section4
+   - section4.3
 
+- name: 4.4 Rebuild the images to include security patches (Not Scored)
+  debug:
+    msg: "Playbook does not handle this as it is a process change"
+  tags:
+   - notscored
+   - section4
+   - section4.4
+
+- name: 4.5 Enable Content trust for Docker (Scored)
+  debug:
+    msg: "We will enable this in future when we have the infrastructure to do so. Please contact @jose.galarza"
+#   lineinfile:
+#     dest: /etc/bash.bashrc
+#     line: "export DOCKER_CONTENT_TRUST=1"
+  tags:
+   - scored
+   - section4
+   - section4.5
+
+- name: 4.6 Ensure HEALTHCHECK instructions have been added to the container image (Scored)
+  debug:
+    msg: "Playbook does not handle this as it is a process change"
+  tags:
+    - scored
+    - section4
+    - section4.6
+
+- name: 4.7 Ensure update instructions are not use alone in the Dockerfile (Not Scored)
+  debug:
+    msg: "Playbook does not handle this as it is a process change"
+  tags:
+    - scored
+    - section4
+    - section4.7
+
+- name: 4.8 Ensure setuid and setgid permissions are removed in the images (Not Scored)
+  debug:
+    msg: "Playbook does not handle this as it is a process chnage"
+  tags:
+    - notscored
+    - section4
+    - section4.8
+
+- name: 4.9 Ensure COPY is used instead of ADD in Dockerfile (Not Scored)
+  debug:
+    msg: "Playbook does not handle this as it is a process chnage"
+  tags:
+    - notscored
+    - section4
+    - section4.9
+
+- name: 4.10 Ensure secrets are not stored in Dockerfiles (Not Scored)
+  debug:
+    msg: "Playbook does not handle this as it is a process chnage"
+  tags:
+    - notscored
+    - section4
+    - section4.10
+
+- name: 4.11 Ensure verified packages are only Installed (Not Scored)
+  debug:
+    msg: "Playbook does not handle this as it is a process chnage"
+  tags:
+    - notscored
+    - section4
+    - section4.11

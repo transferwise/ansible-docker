@@ -1,28 +1,46 @@
-CIS
+Docker
 =========
 
-This role can be used to audit or remediate a host against the Center for Internet Security (CIS) security benchmarks for docker 1.11.
-
-*Disclaimer: This project has no affiliation with CIS.  The role and its contents have not been reviewed or endorsed by CIS.*
-
+This role is used to set up Docker. It also has CIS embedded to configure the host for Center for Internet Security (CIS) security benchmarks for Docker v1.1.0
 
 Requirements
 ------------
 
-This role has no requirements or dependencies.
-This role runs on rhel-centos 6 / 7
+This role runs on Ubuntu 16.04, but has not been tested on other OSes.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+Available variables are listed below, along with default values (see `vars/main.yml`).
+
+```
+ulimit_nofile_soft: 102400
+ulimit_nofile_hard: 102400
+```
+
+We only use one set of ulimits. `nofile` can be set with a hard and soft limit. If you don't understand what these values do, leave them alone.
+
+```
+cgroup_parent: "docker"
+```
+This sets the cgroup that Docker will use to launch containers into. This doesn't need to change unless you really want it to.
+
+```
+userns_remap_user: "default"
+```
+This playbook makes use of Docker's default behaviours; if you set the `userns-remap` to `default`, Docker will create a user called `dockeremap`. If you wish to change this, please [check the Docker guide for setting up a namespace user.](https://docs.docker.com/engine/security/userns-remap/#enable-userns-remap-on-the-daemon).
+
+```
+tls_verify: true
+tls_ca_cert: /path/to/ca/cert
+tls_cert: /path/to/cert
+tls_key: /path/to/key
+```
+If you want to set up TLS for Docker, change the above values to point to where you have placed your TLS certificates and keys.
 
 Dependencies
 ------------
-
-*Always* run the role in check mode if you're unsure of its effects.
-
-Be aware that some of the default variables are set against CIS recommendations in the hopes that they will cause minimal disruption to a system.
+None.
 
 Example Playbook
 ----------------
@@ -31,7 +49,7 @@ Playbooks can utilize the CIS role without much effort:
 
     - hosts: all
       roles:
-        - cis
+        - ansible-docker
 
 The role is thoroughly tagged so that you can run certain sections or certain levels of checks:
 
@@ -45,9 +63,3 @@ License
 -------
 
 Apache License, Version 2.0
-
-Author Information
-------------------
-
-Tomasz Daszkiewicz 
-

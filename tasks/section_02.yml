@@ -1,24 +1,311 @@
-#
-#   Licensed under the Apache License, Version 2.0 (the "License");
-#   you may not use this file except in compliance with the License.
-#   You may obtain a copy of the License at
-#
-#       http://www.apache.org/licenses/LICENSE-2.0
-#
-#   Unless required by applicable law or agreed to in writing, software
-#   distributed under the License is distributed on an "AS IS" BASIS,
-#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#   See the License for the specific language governing permissions and
-#   limitations under the License.
-#
+---
 
-  - include: section_02_level1.yml
-    tags:
-      - section2
-      - level1
+- name: Create docker daemon json file
+  template:
+    src: daemon.json.j2
+    dest: /etc/docker/daemon.json
+  notify: Reload docker
+  tags:
+    - scored
+    - section2
+    - section2.1
+    - section2.2
+    - section2.3
+    - section2.4
+    - section2.5
+    - section2.6
+    - section2.7
+    - section2.8
+    - section2.9
+    - section2.10
+    - section2.11
+    - section2.12
+    - section2.13
+    - section2.14
+    - section2.15
+    - section2.16
+    - section2.17
+    - section2.18
 
-  - include: section_02_level2.yml
-    tags:
-      - section2
-      - level2
+- name: Add soft nofile ulimit to PAM
+  pam_limits:
+    domain: root
+    limit_type: soft
+    limit_item: nofile
+    value: "{{ ulimit_nofile_soft }}"
+  tags:
+    - scored
+    - section2
+    - section2.1
+    - section2.2
+    - section2.3
+    - section2.4
+    - section2.5
+    - section2.6
+    - section2.7
+    - section2.8
+    - section2.9
+    - section2.10
+    - section2.11
+    - section2.12
+    - section2.13
+    - section2.14
+    - section2.15
+    - section2.16
+    - section2.17
+    - section2.18
+
+- name: Add hard nofile ulimit to PAM
+  pam_limits:
+    domain: root
+    limit_type: hard
+    limit_item: nofile
+    value: "{{ ulimit_nofile_hard }}"
+  tags:
+    - scored
+    - section2
+    - section2.1
+    - section2.2
+    - section2.3
+    - section2.4
+    - section2.5
+    - section2.6
+    - section2.7
+    - section2.8
+    - section2.9
+    - section2.10
+    - section2.11
+    - section2.12
+    - section2.13
+    - section2.14
+    - section2.15
+    - section2.16
+    - section2.17
+    - section2.18
+
+- meta: flush_handlers
+  tags:
+    - scored
+    - section2
+    - section2.1
+    - section2.2
+    - section2.3
+    - section2.4
+    - section2.5
+    - section2.6
+    - section2.7
+    - section2.8
+    - section2.9
+    - section2.10
+    - section2.11
+    - section2.12
+    - section2.13
+    - section2.14
+    - section2.15
+    - section2.16
+    - section2.17
+    - section2.18
+
+- name: 2.1 Ensure network traffic is restricted between containers on the default bridge (Scored)
+  shell: docker network inspect bridge --format "{{ '{{' }} .Options {{ '}}' }}" | grep com.docker.network.bridge.enable_icc:false -q
+  register: res
+  failed_when: res.rc == 1
+  changed_when: res.rc == 1
+  tags:
+    - scored
+    - section2
+    - section2.1
+
+- name: 2.2 Ensure the logging level is set to 'info' (Scored)
+  shell: docker info | grep 'log-level=info' -q
+  register: res
+  failed_when: res.rc == 1
+  changed_when: res.rc == 1
+  tags:
+    - scored
+    - section2
+    - section2.2
+
+- name: 2.3 Ensure Docker is allowed to make changes to iptables (Scored)
+  shell: docker info | grep 'iptables=true' -q
+  register: res
+  failed_when: res.rc == 1
+  changed_when: res.rc == 1
+  tags:
+    - scored
+    - section2
+    - section2.3
+
+# There should only be 1 insecure registry, and that is 127.0.0.1/8
+- name: 2.4 Ensure insecure registries are not used (Scored)
+  shell: docker info | grep 'Insecure Registries' -a2 | grep 'Live Restore' -q
+  register: res
+  failed_when: res.rc == 1
+  changed_when: res.rc == 1
+  tags:
+    - scored
+    - section2
+    - section2.4
+
+- name: 2.5 Ensure aufs storage driver is not used (Scored)
+  shell: docker info | grep 'Storage Driver' | awk '{print $3}'
+  register: res
+  failed_when: res.stdout.find("aufs") == true
+  changed_when: res.stdout.find("aufs") == true
+  tags:
+    - scored
+    - section2
+    - section2.5
+
+# The linter will complain about you not using the systemd module here. I don't
+# _need_ to use the systemd module though.
+- name: Find out if Docker is running on socket or TCP
+  command: bash -c "systemctl cat docker.service | grep ExecStart | awk '{print $3}' | grep 'fd://' -q"
+  register: docker_is_unix_socket
+  changed_when: docker_is_unix_socket.rc == 1
+  tags:
+    - scored
+    - section2
+    - section2.5
+
+# Only run this when we're _not_ running on TCP
+- name: 2.6 Ensure TLS authentication for Docker daemon is configured (Scored)
+  shell: docker info | grep {{ item }} -q
+  register: res
+  failed_when: res.rc == 1
+  changed_when: res.rc == 1
+  with_items:
+    - tlsverify
+    - tlscacert
+    - tlscert
+    - tlskey
+  when: docker_is_unix_socket.rc == 1
+  tags:
+    - scored
+    - section2
+    - section2.6
+
+- name: 2.7 Ensure the default ulimit is configured appropriately (Not Scored)
+  shell: docker info | grep ulimit -q
+  register: res
+  failed_when: res.rc == 1
+  changed_when: res.rc == 1
+  tags:
+    - scored
+    - section2
+    - section2.7
+
+- name: 2.8 Enable user namespace support (Scored)
+  command: "grep 'dockremap' /etc/subuid /etc/subgid -q"
+  register: res
+  failed_when: res.rc == 1
+  changed_when: res.rc ==1
+  tags:
+    - scored
+    - section2
+    - section2.8
+  when: userns_remap_user == "default"
+
+- name: 2.8 Enable user namespace support (Scored)
+  command: "grep '{{ userns_remap_user }}' /etc/subuid /etc/subgid -q"
+  register: res
+  failed_when: res.rc == 1
+  changed_when: res.rc ==1
+  tags:
+    - scored
+    - section2
+    - section2.8
+  when: userns_remap_user != "default"
+
+- name: 2.9 Ensure the default cgroup usage has been confirmed (Scored)
+  shell: docker info | grep 'cgroup-parent=docker' -q
+  register: res
+  failed_when: res.rc == 1
+  changed_when: res.rc == 1
+  tags:
+    - scored
+    - section2
+    - section2.9
+
+- name: 2.10 Ensure base device size is not changed until needed (Scored)
+  debug:
+    msg: "We are delegating this role to Kubernetes"
+  tags:
+    - scored
+    - section2
+    - section2.10
+
+- name: 2.11 Ensure that authorization for Docker client commands is enabled (Scored)
+  debug:
+    msg: "We are delegating this role to Kubernetes"
+  tags:
+    - scored
+    - section2
+    - section2.11
+
+- name: 2.12 Ensure centralized and remote logging is configured (Scored)
+  debug:
+    msg: "This is being handled by Kubernetes"
+  tags:
+    - scored
+    - section2
+    - section2.12
+
+- name: 2.13 Ensure operations on legacy registry (v1) are Disabled (Scored)
+  shell: docker info | grep legacy-registry -q
+  register: res
+  failed_when: res.rc == 1
+  changed_when: res.rc == 1
+  tags:
+    - scored
+    - section2
+    - section2.13
+
+- name: 2.14 Ensure live restore is Enabled (Scored)
+  shell: docker info | grep "Live Restore Enabled{{':'}} true"
+  register: res
+  failed_when: res.rc == 1
+  changed_when: res.rc == 1
+  tags:
+    - scored
+    - section2
+    - section2.14
+
+- name: 2.15 Ensure Userland Proxy is Disabled (Scored)
+  shell: docker info | grep 'userland-proxy=false' -q
+  register: res
+  failed_when: res.rc == 1
+  changed_when: res.rc == 1
+  tags:
+    - scored
+    - section2
+    - section2.15
+
+- name: 2.16 Ensure daemon-wide custom seccomp profile is applied, if needed (Not Scored)
+  debug:
+    msg: "Ignoring this for now"
+  tags:
+    - scored
+    - section2
+    - section2.16
+
+- name: 2.17 Ensure experimental features are avoided in production (Scored)
+  shell: docker info | grep 'Experimental{{':'}} false' -q
+  register: res
+  failed_when: res.rc == 1
+  changed_when: res.rc == 1
+  tags:
+    - scored
+    - section2
+    - section2.17
+
+- name: 2.18 Ensure containers are restricted from acquiring new privileges (Scored)
+  shell: docker info | grep 'no-new-privileges=true' -q
+  register: res
+  failed_when: res.rc == 1
+  changed_when: res.rc == 1
+  tags:
+    - scored
+    - section2
+    - section2.18
 

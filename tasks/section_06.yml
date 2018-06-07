@@ -1,20 +1,31 @@
-#
-#   Licensed under the Apache License, Version 2.0 (the "License");
-#   you may not use this file except in compliance with the License.
-#   You may obtain a copy of the License at
-#
-#       http://www.apache.org/licenses/LICENSE-2.0
-#
-#   Unless required by applicable law or agreed to in writing, software
-#   distributed under the License is distributed on an "AS IS" BASIS,
-#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#   See the License for the specific language governing permissions and
-#   limitations under the License.
-#
+---
+- name: 6.1 Perform regular security audits of your host system and containers (Not Scored)
+  debug: msg="*** Follow your organization's security audit policies and requirements."
+  tags:
+   - notscored
+   - section6.1
 
+- name: 6.2 Monitor Docker containers usage, performance and metering (Not Scored)
+  debug: msg="*** Use a software or a container for tracking container usage, reporting performance and metering."
+  tags:
+   - notscored
+   - section6.2
 
-  - include: section_06_level1.yml
-    tags:
-      - section6
-      - level1
+- name: 6.3 Backup container data (Not Scored)
+  debug: msg="*** You should follow your organization's policy for data backup."
+  tags:
+   - notscored
+   - section6.3
+
+- name: 6.4 Avoid image sprawl (Not Scored)
+  debug: msg="*** Keep the set of the images that you actually need and establish a workflow to remove old or stale images from the host."
+  tags:
+   - notscored
+   - section6.4
+
+- name: 6.5 Avoid container sprawl (Not Scored)
+  debug: msg="*** Periodically check your container inventory per host and clean up the containers that are not needed"
+  tags:
+   - notscored
+   - section6.5
 

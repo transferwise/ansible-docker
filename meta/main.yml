@@ -1,0 +1,10 @@
+---
+galaxy_info:
+  author: James Bach
+  description: A role that configures and installs Docker, then applies CIS benchmarks
+  license: Apache 2.0
+  min_ansible_version: 2.1
+  platforms:
+    - name: Ubuntu
+      versions:
+        - 16.04
