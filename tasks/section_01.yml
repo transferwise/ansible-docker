@@ -31,20 +31,14 @@
    - section1.4
 
 - name: Create auditd rules
-  lineinfile:
-    dest: /etc/audit/audit.rules
-    line: "-w {{ item }} -k docker"
-  notify: Reload auditd Rules
-  with_items:
-    - '/usr/bin/docker'
-    - '/var/lib/docker'
-    - '/etc/docker'
-    - '/lib/systemd/system/docker.service'
-    - '/lib/systemd/system/docker.socket'
-    - '/etc/default/docker'
-    - '/etc/docker/daemon.json'
-    - '/usr/bin/docker-containerd'
-    - '/usr/bin/docker-runc'
+  template: 
+    backup: yes 
+    src: audit.rules 
+    dest: /etc/audit/rules.d/docker.rules 
+    owner: root 
+    group: root 
+    mode: 0640
+  register: auditrules
   tags:
    - scored
    - section1
@@ -57,6 +51,18 @@
    - section1.11
    - section1.12
    - section1.13
+
+- name: generate audit rules
+  when: auditrules.changed
+  command: augenrules
+
+# auditd might be in immutable mode, restarting the service will have no effect - needs reboot
+- name: reboot due to changed auditd rules
+  when: auditrules.changed
+  reboot:
+    msg: post auditd restart
+    post_reboot_delay: 10
+    reboot_timeout: 300
 
 # This forces handler to run
 - meta: flush_handlers
