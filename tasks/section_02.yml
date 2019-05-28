@@ -150,8 +150,9 @@
 - name: 2.5 Ensure aufs storage driver is not used (Scored)
   shell: docker info | grep 'Storage Driver' | awk '{print $3}'  # noqa 306
   register: res
-  failed_when: res.stdout.find("aufs")
-  changed_when: res.stdout.find("aufs")
+  # Not comparing to `true` breaks the playbook, so screw the linter
+  failed_when: res.stdout.find("aufs") == true # noqa 601
+  changed_when: res.stdout.find("aufs") == true  # noqa 601
   tags:
     - scored
     - section2
