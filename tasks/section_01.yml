@@ -31,20 +31,14 @@
    - section1.4
 
 - name: Create auditd rules
-  lineinfile:
-    dest: /etc/audit/audit.rules
-    line: "-w {{ item }} -k docker"
-  notify: Reload auditd Rules
-  with_items:
-    - '/usr/bin/docker'
-    - '/var/lib/docker'
-    - '/etc/docker'
-    - '/lib/systemd/system/docker.service'
-    - '/lib/systemd/system/docker.socket'
-    - '/etc/default/docker'
-    - '/etc/docker/daemon.json'
-    - '/usr/bin/docker-containerd'
-    - '/usr/bin/docker-runc'
+  template:
+    backup: yes
+    src: audit.rules
+    dest: /etc/audit/rules.d/docker.rules
+    owner: root
+    group: root
+    mode: 0640
+  register: auditrules
   tags:
    - scored
    - section1
@@ -57,6 +51,18 @@
    - section1.11
    - section1.12
    - section1.13
+
+- name: generate audit rules
+  when: auditrules.changed # noqa 503
+  command: augenrules
+
+# auditd might be in immutable mode, restarting the service will have no effect - needs reboot
+- name: reboot due to changed auditd rules
+  when: auditrules.changed # noqa 503
+  reboot:
+    msg: post auditd restart
+    post_reboot_delay: 10
+    reboot_timeout: 300
 
 # This forces handler to run
 - meta: flush_handlers
@@ -74,7 +80,7 @@
     - section1.13
 
 - name: 1.5 Ensure auditing is configured for the Docker daemon (Scored)
-  shell: auditctl -l | grep /usr/bin/docker
+  shell: auditctl -l | grep /usr/bin/docker # noqa 306
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -84,7 +90,7 @@
    - section1.5
 
 - name: 1.6 Ensure auditing is configured for Docker files and directories - /var/lib/docker (Scored)
-  shell: auditctl -l | grep /var/lib/docker
+  shell: auditctl -l | grep /var/lib/docker # noqa 306
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -94,7 +100,7 @@
    - section1.6
 
 - name: 1.7 Ensure auditing is configured for Docker files and directories - /etc/docker (Scored)
-  shell: auditctl -l | grep /etc/docker
+  shell: auditctl -l | grep /etc/docker # noqa 306
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -104,7 +110,7 @@
    - section1.7
 
 - name: 1.8 Ensure auditing is configured for Docker files and directories - docker.service (Scored)
-  shell: auditctl -l | grep /lib/systemd/system/docker.service
+  shell: auditctl -l | grep /lib/systemd/system/docker.service # noqa 306
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -114,7 +120,7 @@
    - section1.8
 
 - name: 1.9 Ensure auditing is configured for Docker files and directories - docker.socket (Scored)
-  shell: auditctl -l | grep /lib/systemd/system/docker.socket
+  shell: auditctl -l | grep /lib/systemd/system/docker.socket # noqa 306
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -124,7 +130,7 @@
    - section1.9
 
 - name: 1.10 Ensure auditing is configured for Docker files and directories - /etc/default/docker (Scored)
-  shell: auditctl -l | grep /etc/default/docker
+  shell: auditctl -l | grep /etc/default/docker # noqa 306
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -134,7 +140,7 @@
    - section1.10
 
 - name: 1.11 Ensure auditing is configured for Docker files and directories - /etc/docker/daemon.json (Scored)
-  shell: auditctl -l | grep /etc/docker/daemon.json
+  shell: auditctl -l | grep /etc/docker/daemon.json # noqa 306
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -144,7 +150,7 @@
    - section1.11
 
 - name: 1.12 Ensure auditing is configured for Docker files and directories - /usr/bin/docker-containerd (Scored)
-  shell: auditctl -l | grep /usr/bin/docker-containerd
+  shell: auditctl -l | grep /usr/bin/docker-containerd # noqa 306
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -154,7 +160,7 @@
    - section1.12
 
 - name: 1.13 Ensure auditing is configured for Docker files and directories - /usr/bin/docker-runc (Scored)
-  shell: auditctl -l | grep /usr/bin/docker-runc
+  shell: auditctl -l | grep /usr/bin/docker-runc # noqa 306
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1

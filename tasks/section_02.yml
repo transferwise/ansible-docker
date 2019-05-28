@@ -107,7 +107,7 @@
     - section2.18
 
 - name: 2.1 Ensure network traffic is restricted between containers on the default bridge (Scored)
-  shell: docker network inspect bridge --format "{{ '{{' }} .Options {{ '}}' }}" | grep com.docker.network.bridge.enable_icc:false -q
+  shell: docker network inspect bridge --format "{{ '{{' }} .Options {{ '}}' }}" | grep com.docker.network.bridge.enable_icc:false -q  # noqa 306
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -117,7 +117,7 @@
     - section2.1
 
 - name: 2.2 Ensure the logging level is set to 'info' (Scored)
-  shell: docker info | grep 'log-level=info' -q
+  shell: docker info | grep 'log-level=info' -q  # noqa 306
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -127,7 +127,7 @@
     - section2.2
 
 - name: 2.3 Ensure Docker is allowed to make changes to iptables (Scored)
-  shell: docker info | grep 'iptables=true' -q
+  shell: docker info | grep 'iptables=true' -q  # noqa 306
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -138,7 +138,7 @@
 
 # There should only be 1 insecure registry, and that is 127.0.0.1/8
 - name: 2.4 Ensure insecure registries are not used (Scored)
-  shell: docker info | grep 'Insecure Registries' -a2 | grep 'Live Restore' -q
+  shell: docker info | grep 'Insecure Registries' -a2 | grep 'Live Restore' -q  # noqa 306
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -148,10 +148,11 @@
     - section2.4
 
 - name: 2.5 Ensure aufs storage driver is not used (Scored)
-  shell: docker info | grep 'Storage Driver' | awk '{print $3}'
+  shell: docker info | grep 'Storage Driver' | awk '{print $3}'  # noqa 306
   register: res
-  failed_when: res.stdout.find("aufs") == true
-  changed_when: res.stdout.find("aufs") == true
+  # Not comparing to `true` breaks the playbook, so screw the linter
+  failed_when: res.stdout.find("aufs") == true # noqa 601
+  changed_when: res.stdout.find("aufs") == true  # noqa 601
   tags:
     - scored
     - section2
@@ -170,7 +171,7 @@
 
 # Only run this when we're _not_ running on TCP
 - name: 2.6 Ensure TLS authentication for Docker daemon is configured (Scored)
-  shell: docker info | grep {{ item }} -q
+  shell: docker info | grep {{ item }} -q  # noqa 306
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -186,7 +187,7 @@
     - section2.6
 
 - name: 2.7 Ensure the default ulimit is configured appropriately (Not Scored)
-  shell: docker info | grep ulimit -q
+  shell: docker info | grep ulimit -q  # noqa 306
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -218,7 +219,7 @@
   when: userns_remap_user != "default"
 
 - name: 2.9 Ensure the default cgroup usage has been confirmed (Scored)
-  shell: docker info | grep 'cgroup-parent=docker' -q
+  shell: docker info | grep 'cgroup-parent=docker' -q # noqa 306
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -252,7 +253,7 @@
     - section2.12
 
 - name: 2.13 Ensure operations on legacy registry (v1) are Disabled (Scored)
-  shell: docker info | grep legacy-registry -q
+  shell: docker info | grep legacy-registry -q # noqa 306
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -262,7 +263,7 @@
     - section2.13
 
 - name: 2.14 Ensure live restore is Enabled (Scored)
-  shell: docker info | grep "Live Restore Enabled{{':'}} true"
+  shell: docker info | grep "Live Restore Enabled{{':'}} true" # noqa 306
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -272,7 +273,7 @@
     - section2.14
 
 - name: 2.15 Ensure Userland Proxy is Disabled (Scored)
-  shell: docker info | grep 'userland-proxy=false' -q
+  shell: docker info | grep 'userland-proxy=false' -q # noqa 306
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -290,7 +291,7 @@
     - section2.16
 
 - name: 2.17 Ensure experimental features are avoided in production (Scored)
-  shell: docker info | grep 'Experimental{{':'}} false' -q
+  shell: docker info | grep 'Experimental{{':'}} false' -q # noqa 306
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
@@ -300,7 +301,7 @@
     - section2.17
 
 - name: 2.18 Ensure containers are restricted from acquiring new privileges (Scored)
-  shell: docker info | grep 'no-new-privileges=true' -q
+  shell: docker info | grep 'no-new-privileges=true' -q # noqa 306
   register: res
   failed_when: res.rc == 1
   changed_when: res.rc == 1
