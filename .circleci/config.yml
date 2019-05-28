@@ -11,9 +11,8 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            pip install ansible ansible-lint
+            pip install ansible==2.8.0 ansible-lint==4.1.0
       - run:
           command: |
             . venv/bin/activate
             ansible-lint .
-
